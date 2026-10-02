@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: car-showroom-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/car_showroom?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none        # schema is owned by Flyway migrations
+  flyway:
+    enabled: true
+  autoconfigure:
+    # we issue our own JWTs, so Spring's generated default user/password is not wanted
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+  jwt:
+    # at least 32 characters; override with the JWT_SECRET environment variable outside development
+    secret: ${JWT_SECRET:dev-only-secret-change-me-please-0123456789}
+    expiry-minutes: 480
