@@ -1,14 +1,14 @@
 # Car Showroom Management - Backend
 
 Spring Boot 3 (Java 21) REST API with JWT login, role-based permissions and MySQL 8.
-The React frontend lives in its own project: `car-showroom-frontend`.
+The React UI is the `frontend/` service of the same repository.
 
 ## Run it
 
 You need JDK 21, Maven 3.9+ and Docker (or your own MySQL 8).
 
 ```bash
-docker compose up -d        # MySQL 8 (schema car_showroom, user root / password root)
+docker compose up -d mysql  # run from the repo root: MySQL 8 (schema car_showroom, user root / password root)
 mvn spring-boot:run         # API on http://localhost:8080, Flyway creates tables and demo data
 ```
 
@@ -16,9 +16,9 @@ mvn spring-boot:run         # API on http://localhost:8080, Flyway creates table
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `DB_USER`, `DB_PASSWORD` | `root` / `root` | MySQL login (edit the URL in `application.yml` for another host) |
+| `DB_URL`, `DB_USER`, `DB_PASSWORD` | local MySQL, `root` / `root` | MySQL connection |
 | `JWT_SECRET` | dev value | Token signing key, 32+ characters. **Set it outside development.** |
-| `CORS_ORIGINS` | `http://localhost:5173` | Frontend origin(s), comma separated |
+| `CORS_ORIGINS` | `http://localhost:5173` | Frontend origin(s), comma separated (not needed behind the nginx proxy) |
 
 Tokens last 8 hours (`app.jwt.expiry-minutes`).
 

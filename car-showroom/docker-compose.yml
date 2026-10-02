@@ -1,0 +1,43 @@
+# Three services in one repo:
+#   mysql    - database (the only one you need for local development)
+#   backend  - Spring Boot API, built from ./backend
+#   frontend - React app served by nginx, built from ./frontend, proxies /api to the backend
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: car-showroom-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: car_showroom
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/car_showroom?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me-please-0123456789}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  mysql_data:
