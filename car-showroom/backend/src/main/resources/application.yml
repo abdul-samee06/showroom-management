@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: car-showroom-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/car_showroom?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none        # schema is owned by Flyway migrations
+  flyway:
+    enabled: true
